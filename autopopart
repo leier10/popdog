@@ -1,0 +1,40 @@
+# -*-coding:UTF-8-*-
+from PIL import Image, ImageEnhance
+from random import randint
+
+local = raw_input("Digite o local da imagem: ")
+im = Image.open(local).convert("RGB")
+im.load()
+
+ix, iy = im.size
+area = (0, 0, ix, iy)
+recorte = im.crop(area)
+
+Ix = ix * 2
+Iy = iy * 2
+base = Image.new("RGB", (Ix, Iy))
+
+def pop(l, u, r, d):
+    # Cor
+    cx = randint(-2, 3)
+    mlhc = ImageEnhance.Color(recorte)
+    mlhc.enhance(cx).save("c.jpg")
+    c = Image.open("c.jpg")
+    # Contraste
+    tx = 2
+    mlhcc = ImageEnhance.Contrast(c)
+    mlhcc.enhance(tx).save("cc.jpg")
+    cc = Image.open("cc.jpg")
+    # Nitidez
+    nx = randint(1, 4)
+    mlhccn = ImageEnhance.Sharpness(cc)
+    mlhccn.enhance(nx).save("ccn.jpg")
+    ccn = Image.open("ccn.jpg")
+    base.paste(ccn, (l, u, r, d))
+
+pop(0, 0, ix, iy)
+pop(ix, 0, Ix, iy)
+pop(0, iy, ix, Iy)
+pop(ix, iy, Ix, Iy)
+base.save('popdog.jpg')
+base.show()
